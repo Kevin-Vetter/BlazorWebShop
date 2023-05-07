@@ -16,30 +16,30 @@ Welcome to your new app.
                 <ProductCardComponent CurrentProduct="@prod"></ProductCardComponent>
             }
         </div>
+
+        <nav class="d-flex justify-content-between">
+
+            <ul class="pagination">
+                <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(page - 1)" class="page-link" value="Previous" /></li>
+                @for (int i = 1; i <= count; i++)
+                {
+                    <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@i" value="@i" class="page-link" /></li>
+                }
+                <li class="page-item"><input class="page-link" type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(page + 1)" value="Next" /></li>
+            </ul>
+            <ul class="pagination">
+                <li class="page-item">
+                    <select asp-for="PageSize" onchange="document.forms['paging'].submit()" class="form-select-sm h-100">
+                        <option value="10">10</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </select>
+                </li>
+            </ul>
+        </nav>
     </div>
 }
 
-@*<nav class="d-flex justify-content-between">
-
-    <ul class="pagination">
-        <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(Model.CurrentPage - 1)" class="page-link" value="Previous" /></li>
-        @for (int i = 1; i <= Model.Products.PageCount; i++)
-        {
-            <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@i" value="@i" class="page-link" /></li>
-        }
-        <li class="page-item"><input class="page-link" type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(Model.CurrentPage + 1)" value="Next" /></li>
-    </ul>
-    <ul class="pagination">
-        <li class="page-item">
-            <select asp-for="PageSize" onchange="document.forms['paging'].submit()" class="form-select-sm h-100">
-                <option value="10">10</option>
-                <option value="50">50</option>
-                <option value="100">100</option>
-            </select>
-        </li>
-    </ul>
-</nav>
-*@
 @code {
 
     private Page<Product> Products { get; set; }
@@ -48,10 +48,10 @@ Welcome to your new app.
     private int page { get; set; } = 1;
     private int count { get; set; } = 5;
 
-                                                      
+
     protected async override Task OnInitializedAsync()
     {
-        
+
         Products = await Http.GetFromJsonAsync<Page<Product>>($"https://localhost:7180/api/Products?search={search}&page={page}&count={count}");
 
         await base.OnInitializedAsync();

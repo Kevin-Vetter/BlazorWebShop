@@ -1,13 +1,14 @@
 ﻿@using DAL.Model;
+
 @if (CurrentProduct != null)
 {
-    <img class="img-fluid" src="/pics/@CurrentProduct.ImgPath" />
-    <h4>Price</h4>
-    <p>@CurrentProduct.Price</p>
-    <h4>Description</h4>
-    <p>@CurrentProduct.Description</p>
+        <img class="img-fluid" src="/pics/@CurrentProduct.ImgPath" />
+        <h4>Price</h4>
+        <p>@CurrentProduct.Price</p>
+        <h4>Description</h4>
+        <p>@CurrentProduct.Description</p>
+    <button type="button" class="btn btn-success">Add To Cart</button>
 }
-
 
 
 @code {
