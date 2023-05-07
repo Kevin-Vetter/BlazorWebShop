@@ -1,0 +1,16 @@
+﻿@using DAL.Model;
+@if (CurrentProduct != null)
+{
+    <img class="img-fluid" src="/pics/@CurrentProduct.ImgPath" />
+    <h4>Price</h4>
+    <p>@CurrentProduct.Price</p>
+    <h4>Description</h4>
+    <p>@CurrentProduct.Description</p>
+}
+
+
+
+@code {
+    [Parameter]
+    public Product CurrentProduct { get; set; }
+}

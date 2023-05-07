@@ -1,0 +1,53 @@
+﻿@using Blazored.Modal.Services;
+@using Blazored.Modal;
+@using DAL.Model;
+@inject HttpClient Http
+@inject IModalService IMS
+
+@if (CurrentProduct != null)
+{
+    <div class="col-4">
+        <div class="card" style="width: 18rem; ">
+            <img class="card-img-top" src="/pics/@CurrentProduct.ImgPath" alt="Card image cap">
+            <div class="card-body border-top">
+                <h4 class="card-title">@CurrentProduct.Name</h4>
+                <h5 class="card-title">@CurrentProduct.Price</h5>
+                <p class="card-text">@CurrentProduct.Brand.BrandName</p>
+                <button type="button" class="btn btn-success" @onclick='() => IMS.Show<ProductModal>(CurrentProduct.Name, new ModalParameters().Add("CurrentProduct",CurrentProduct))'>
+                    View Product
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+
+   
+   @* <div class="modal fade mt-0" id="exampleModal-@CurrentProduct.Id" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 class="modal-title">@CurrentProduct.Name</h3>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <img class="img-fluid" src="/pics/@CurrentProduct.ImgPath" />
+                    <h4>Price</h4>
+                    <p>@CurrentProduct.Price</p>
+                    <h4>Description</h4>
+                    <p>@CurrentProduct.Description</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-success" onclick="AddToCart('@CurrentProduct.Id')">Add To Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>*@
+}
+
+@code {
+    [ParameterAttribute]
+    public Product CurrentProduct { get; set; }
+
+}
