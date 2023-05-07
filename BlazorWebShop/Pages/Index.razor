@@ -20,16 +20,16 @@ Welcome to your new app.
         <nav class="d-flex justify-content-between">
 
             <ul class="pagination">
-                <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(page - 1)" class="page-link" value="Previous" /></li>
+                <li class="page-item"><input type="submit"  class="page-link" value="Previous" /></li>
                 @for (int i = 1; i <= count; i++)
                 {
-                    <li class="page-item"><input type="submit" asp-page-handler="Search" asp-route-CurrentPage="@i" value="@i" class="page-link" /></li>
+                    <li class="page-item"><input type="submit"  value="@i" class="page-link" /></li>
                 }
-                <li class="page-item"><input class="page-link" type="submit" asp-page-handler="Search" asp-route-CurrentPage="@(page + 1)" value="Next" /></li>
+                <li class="page-item"><input class="page-link" type="submit" value="Next" /></li>
             </ul>
             <ul class="pagination">
                 <li class="page-item">
-                    <select asp-for="PageSize" onchange="document.forms['paging'].submit()" class="form-select-sm h-100">
+                    <select asp-for="PageSize" onchange="" class="form-select-sm h-100">
                         <option value="10">10</option>
                         <option value="50">50</option>
                         <option value="100">100</option>
