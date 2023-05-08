@@ -1,6 +1,72 @@
 ﻿@page "/admin/product/create"
+@inject HttpClient Http
+@inject IToastService ITS
+@using BlazorWebShop.Model;
+@using Blazored.Toast.Services;
+@using DAL.Model
+@using Microsoft.AspNetCore.Components.Forms
+@using System.ComponentModel.DataAnnotations;
+
 <h3>Create</h3>
 
+<EditForm Model="model" OnValidSubmit="@Valid" class="col-6">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <label for="name">Name</label>
+    <InputText @bind-Value=model.Name class="form-control mb-3" id="name" />
+
+    <label for="price">Price</label>
+    <InputNumber @bind-Value=model.Price class="form-control mb-3" id="price" />
+
+    <label for="bId">Brand Id</label>
+    <InputNumber @bind-Value=model.BrandId class="form-control mb-3" id="bId" />
+
+    <label for="cId">Category Id</label>
+    <InputNumber @bind-Value=model.CatId class="form-control mb-3" id="cId" />
+
+    <label for="desc">Description</label>
+    <InputTextArea @bind-Value=model.Desc class="form-control mb-3" id="desc" />
+
+    <label for="path">Image Path</label>
+    <InputText @bind-Value=model.Path class="form-control mb-3" id="path" />
+
+    <input type="submit" class="btn btn-success mt-5" value="Create" />
+
+</EditForm>
+
 @code {
+    ProductBlazorModel model = new();
+
+    async Task Valid()
+    {
+        ProductModel prod = new()
+            {
+                name = model.Name,
+                price = model.Price,
+                brandId = model.BrandId,
+                catId = model.CatId,
+                desc = model.Desc,
+                path = model.Path
+
+
+            };
+        await Http.PostAsJsonAsync<ProductModel>($"https://localhost:7180/api/Products", prod);
+        ITS.ShowSuccess("Created new product", option => option.Timeout = 2);
+    }
+
+
+   
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class ProductModel
+    {
+        public string name { get; set; }
+        public decimal price { get; set; }
+        public int brandId { get; set; }
+        public int catId { get; set; }
+        public string desc { get; set; }
+        public string path { get; set; }
+    }
+
 
 }

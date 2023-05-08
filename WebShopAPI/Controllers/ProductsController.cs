@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using ServiceLayer.Service;
+using WebShopAPI.Models;
 
 namespace API.Controllers
 {
@@ -36,12 +37,11 @@ namespace API.Controllers
         }
 
         [HttpPost]
-        public IActionResult AddProduct(string name, decimal price, int brandId, int catId, string desc, string path)
+        public IActionResult AddProduct(CreateProductModel prodmod)
         {
-
             try
             {
-                _repo.CreateNewProduct(name, price, brandId, catId, desc, path);
+                _repo.CreateNewProduct(prodmod.name, prodmod.price, prodmod.brandId, prodmod.catId, prodmod.desc, prodmod.path);
             }
             catch (Exception e)
             {

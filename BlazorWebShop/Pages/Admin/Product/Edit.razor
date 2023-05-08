@@ -1,6 +1,118 @@
 ﻿@page "/admin/product/edit"
+@using BlazorWebShop.Model;
+@using DAL.Model
+@using Microsoft.AspNetCore.JsonPatch;
+@inject IToastService ITS
+@inject HttpClient Http
+
 <h3>Edit</h3>
 
-@code {
+<label for="loader">Id</label>
+<InputNumber @bind-Value=id name="loader" />
+<button class="btn btn-success" @onclick="Load">Load</button>
 
+@if (model != null)
+{
+    <EditForm Model="model" OnValidSubmit="@Valid" class="col-6">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <label for="name">Name</label>
+        <InputText @bind-Value=model.Name class="form-control mb-3" id="name" />
+
+        <label for="price">Price</label>
+        <InputNumber @bind-Value=model.Price class="form-control mb-3" id="price" />
+
+        <label for="bId">Brand Id</label>
+        <InputNumber @bind-Value=model.BrandId class="form-control mb-3" id="bId" />
+
+        <label for="cId">Category Id</label>
+        <InputNumber @bind-Value=model.CatId class="form-control mb-3" id="cId" />
+
+        <label for="desc">Description</label>
+        <InputTextArea @bind-Value=model.Desc class="form-control mb-3" id="desc" />
+
+        <label for="path">Image Path</label>
+        <InputText @bind-Value=model.Path class="form-control mb-3" id="path" />
+
+        <input type="submit" class="btn btn-success mt-5" value="Update" />
+
+    </EditForm>
+}
+
+@code {
+    ProductBlazorModel model;
+    private int id { get; set; }
+    public Product product;
+
+    async Task Load()
+    {
+        product = await Http.GetFromJsonAsync<Product>($"https://localhost:7180/api/Products/{id}");
+
+        model = new()
+            {
+                Name = product.Name,
+                Price = product.Price,
+                BrandId = product.BrandId,
+                CatId = product.CategoryId,
+                Desc = product.Description,
+                Path = product.ImgPath
+            };
+    }
+
+    async Task Valid()
+    {
+        JsonPatchDocument<Product> JsonDoc = new();
+
+
+        ProductModel prod = new()
+            {
+                name = model.Name,
+                price = model.Price,
+                brandId = model.BrandId,
+                catId = model.CatId,
+                desc = model.Desc,
+                path = model.Path
+
+
+            };
+
+        if (product.Name != prod.name)
+        {
+            JsonDoc.Replace(x => x.Name, prod.name);
+        }
+        if (product.Price != prod.price)
+        {
+            JsonDoc.Replace(x => x.Price, prod.price);
+        }
+        if (product.BrandId != prod.brandId)
+        {
+            JsonDoc.Replace(x => x.BrandId, prod.brandId);
+        }
+        if (product.CategoryId != prod.catId)
+        {
+            JsonDoc.Replace(x => x.CategoryId, prod.catId);
+        }
+        if (product.Description != prod.desc)
+        {
+            JsonDoc.Replace(x => x.Description, prod.desc);
+        }
+        if (product.ImgPath != prod.path)
+        {
+            JsonDoc.Replace(x => x.ImgPath, prod.path);
+        }
+        await Http.PatchAsJsonAsync($"https://localhost:7180/api/Products", JsonDoc.Operations);
+        ITS.ShowSuccess("Updated product", option => option.Timeout = 2);
+    }
+
+    // Root myDeserializedClass = JsonConvert.DeserializeObject<Root>(myJsonResponse);
+    public class ProductModel
+    {
+        public string name { get; set; }
+        public decimal price { get; set; }
+        public int brandId { get; set; }
+        public int catId { get; set; }
+        public string desc { get; set; }
+        public string path { get; set; }
+    }
 }
