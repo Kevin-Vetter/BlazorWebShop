@@ -1,0 +1,46 @@
+﻿@using BlazorWebShop.Model
+
+<nav class="d-flex justify-content-between mt-2">
+    <ul class="pagination">
+        @foreach (var item in _links)
+        {
+            <li class="page-item @(item.IsActive ? "active" : null) @(item.IsDisabled ? "disabled" : null)" @onclick="() => OnSelectedPage(item)"><span class="page-link" style="cursor: pointer">@item.PageText</span></li>
+        }
+    </ul>
+</nav>
+
+@code {
+    [Parameter]
+    public Parameters Parameters { get; set; }
+    [Parameter]
+    public EventCallback<int> SelectedPage { get; set; }
+    private List<Link> _links;
+
+    protected override void OnParametersSet()
+    {
+        CreatePages();
+    }
+
+    private void CreatePages()
+    {
+        _links = new List<Link>() { new Link { PageText = "Forrige", PageValue = Parameters.CurrentPage - 1, IsDisabled = Parameters.CurrentPage == 1 } };
+
+        for (int i = 1; i <= Parameters.TotalPages; i++)
+        {
+            _links.Add(new Link { PageValue = i, PageText = i.ToString(), IsActive = Parameters.CurrentPage == i });
+        }
+
+        _links.Add(new Link { PageText = "Næste", PageValue = Parameters.CurrentPage + 1, IsDisabled = Parameters.CurrentPage == Parameters.TotalPages });
+    }
+
+    private async Task OnSelectedPage(Link link)
+    {
+        if (link.IsActive || link.IsDisabled)
+        {
+            return;
+        }
+
+        Parameters.CurrentPage = link.PageValue;
+        await SelectedPage.InvokeAsync(link.PageValue);
+    }
+}
